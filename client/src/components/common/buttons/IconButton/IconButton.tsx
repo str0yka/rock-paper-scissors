@@ -12,9 +12,11 @@ export const IconButton: React.FC<IconButtonProps> = ({
 }) => (
   <button
     className={cn(
-      'rounded border border-neutral-950/20 p-2 transition-transform enabled:hover:bg-neutral-950/10 enabled:active:scale-95',
+      'rounded border border-neutral-950/20 p-2 transition-transform',
+      'enabled:hover:bg-neutral-950/10 enabled:active:scale-95',
+      'dark:border-neutral-50/10 dark:text-neutral-50',
       {
-        neutral: '',
+        neutral: 'dark:bg-neutral-800 dark:enabled:hover:bg-neutral-700',
         primary: 'bg-blue-400 enabled:hover:bg-blue-500',
         success: 'bg-green-400 enabled:hover:bg-green-500',
         error: 'bg-red-400 enabled:hover:bg-red-500',

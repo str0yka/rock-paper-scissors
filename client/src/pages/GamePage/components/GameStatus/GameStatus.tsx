@@ -28,5 +28,5 @@ export const GameStatus: React.FC<GameStatusProps> = ({
     return '(❁´◡`❁)';
   };
 
-  return <p className="text-xl font-semibold">{getStatus()}</p>;
+  return <p className="text-xl font-semibold dark:text-neutral-50">{getStatus()}</p>;
 };

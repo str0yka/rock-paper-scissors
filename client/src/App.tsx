@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { Layout } from '~/components';
 import { HomePage, GamePage } from '~/pages';
 import { DYNAMIC, ROUTE } from '~/utils/constants';
+import { ThemeProvider } from '~/features/theme';
 
 const queryClient = new QueryClient();
 
@@ -20,6 +21,8 @@ const router = createBrowserRouter([
 
 export const App = () => (
   <QueryClientProvider client={queryClient}>
-    <RouterProvider router={router} />
+    <ThemeProvider>
+      <RouterProvider router={router} />
+    </ThemeProvider>
   </QueryClientProvider>
 );
