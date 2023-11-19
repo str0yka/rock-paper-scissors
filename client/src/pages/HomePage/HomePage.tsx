@@ -2,15 +2,18 @@ import axios from 'axios';
 import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 
+import { Spinner } from '~/components/common';
+import { ROUTE } from '~/utils/constants';
+
 export const HomePage = () => {
   const navigate = useNavigate();
 
   useQuery<{ roomId: string }, { error: string }>({
-    queryFn: () => axios.get('http://localhost:5001/new').then((res) => res.data),
+    queryFn: () => axios.get(`${import.meta.env.VITE_API_URL}/new`).then((res) => res.data),
     onSuccess: (data) => {
-      navigate(`/${data.roomId}`);
+      navigate(ROUTE.ROOM(data.roomId));
     },
   });
 
-  return <h1>home page</h1>;
+  return <Spinner />;
 };

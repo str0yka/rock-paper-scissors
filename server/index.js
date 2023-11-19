@@ -2,13 +2,14 @@ import 'dotenv/config';
 import { WebSocketServer } from 'ws';
 import express from 'express';
 import cors from 'cors';
-import { v4 as uuidv4 } from 'uuid';
 import url from 'url';
 
 import { rooms } from './db/index.js';
 import { getWinner } from './utils/helpers/index.js';
+import { SERVER_MESSAGE_EVENT, CLIENT_MESSAGE_EVENT } from './utils/constants/index.js';
 import RoomService from './services/room-service.js';
 import UserService from './services/user-service.js';
+import BroadcastService from './services/broadcast-service.js';
 
 const app = express();
 
@@ -16,31 +17,7 @@ const wss = new WebSocketServer({ port: process.env.WS_PORT }, () =>
   console.log(`WS Server started on PORT: ${process.env.WS_PORT}`),
 );
 
-const broadcastRoom = (event, room) => {
-  const message = {
-    event,
-    room,
-  };
-
-  wss.clients.forEach((client) => {
-    if (client.roomId === room.id) {
-      client.send(JSON.stringify(message));
-    }
-  });
-};
-
-const broadcastUser = (event, user) => {
-  const message = {
-    event,
-    user,
-  };
-
-  wss.clients.forEach((client) => {
-    if (client.userId === user.id) {
-      client.send(JSON.stringify(message));
-    }
-  });
-};
+const broadcastService = new BroadcastService(wss);
 
 wss.on('connection', (ws, req) => {
   const {
@@ -54,17 +31,17 @@ wss.on('connection', (ws, req) => {
   const user = UserService.createUser({ ...(username !== '' && { username }), role });
   RoomService.addPlayer(user, room);
 
-  ws.roomId = roomId;
+  ws.roomId = room.id;
   ws.userId = user.id;
 
-  broadcastRoom('PUT_ROOM', room);
-  broadcastUser('PUT_USER', user);
+  broadcastService.send(SERVER_MESSAGE_EVENT.PUT_ROOM, room, (client) => client.roomId === room.id);
+  broadcastService.send(SERVER_MESSAGE_EVENT.PUT_USER, user, (client) => client.userId === user.id);
 
   ws.on('message', (message) => {
     message = JSON.parse(message);
 
     switch (message.event) {
-      case 'choice': {
+      case CLIENT_MESSAGE_EVENT.CHOICE: {
         const room = RoomService.findRoom(ws.roomId);
 
         if (!room) return;
@@ -80,11 +57,11 @@ wss.on('connection', (ws, req) => {
           room.winner = getWinner(user, opponent);
         }
 
-        broadcastRoom('PUT_ROOM', room);
-        broadcastUser('PUT_USER', user);
+        broadcastService.send(SERVER_MESSAGE_EVENT.PUT_ROOM, room, (client) => client.roomId === room.id);
+        broadcastService.send(SERVER_MESSAGE_EVENT.PUT_USER, user, (client) => client.userId === user.id);
         break;
       }
-      case 'restart': {
+      case CLIENT_MESSAGE_EVENT.RESTART: {
         const room = rooms.find((room) => room.id === ws.roomId);
 
         if (!room || !room.winner) return;
@@ -92,23 +69,8 @@ wss.on('connection', (ws, req) => {
         room.winner = null;
         room.players = room.players.map((player) => ({ ...player, choice: null }));
 
-        const patchUserMessage = {
-          event: 'PATCH_USER',
-          user: { choice: null },
-        };
-
-        const patchRoomMessage = {
-          event: 'PUT_ROOM',
-          room,
-        };
-
-        wss.clients.forEach((client) => {
-          if (client.roomId === roomId) {
-            client.send(JSON.stringify(patchUserMessage));
-            client.send(JSON.stringify(patchRoomMessage));
-          }
-        });
-
+        broadcastService.send(SERVER_MESSAGE_EVENT.PATCH_USER, { choice: null }, (client) => client.roomId === roomId);
+        broadcastService.send(SERVER_MESSAGE_EVENT.PUT_ROOM, room, (client) => client.roomId === roomId);
         break;
       }
       default: {
@@ -125,16 +87,7 @@ wss.on('connection', (ws, req) => {
 
       room.players = room.players.filter((player) => player.id !== user.id);
 
-      const changeRoomMessage = {
-        event: 'PUT_ROOM',
-        room,
-      };
-
-      wss.clients.forEach((client) => {
-        if (client.roomId === roomId) {
-          client.send(JSON.stringify(changeRoomMessage));
-        }
-      });
+      broadcastService.send(SERVER_MESSAGE_EVENT.PUT_ROOM, room, (client) => client.roomId === roomId);
     }
   });
 });

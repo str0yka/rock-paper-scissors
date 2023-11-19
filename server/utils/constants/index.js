@@ -1,1 +1,2 @@
-export * from './choices.js';
+export * from './choice.js';
+export * from './message.js';
