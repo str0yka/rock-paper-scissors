@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 * {
+  outline: none;
   font-family:
     Inter,
     system-ui,
