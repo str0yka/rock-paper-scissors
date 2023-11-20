@@ -1,3 +1,5 @@
+import { useIntl } from '~/features/intl';
+
 interface GameStatusProps {
   firstPlayer: Player;
   secondPlayer?: Player;
@@ -11,19 +13,22 @@ export const GameStatus: React.FC<GameStatusProps> = ({
   secondPlayer,
   winner,
 }) => {
+  const intl = useIntl();
+
   const getStatus = () => {
     if (winner) {
-      if (winner === 'DRAW') return 'Ничья!';
-      if (winner.id === user.id) return 'Вы победили!';
-      if (user.role === 'player') return 'Вы проиграли 😔';
-      return `Победил ${winner.username}`;
+      if (winner === 'DRAW') return intl.t('pages.game.status.draw');
+      if (winner.id === user.id) return intl.t('pages.game.status.youWin');
+      if (user.role === 'player') return intl.t('pages.game.status.youLose');
+      return intl.t('pages.game.status.somebodyWin');
     }
 
-    if (!secondPlayer) return 'Ждём второго пользователя';
-    if (user.role === 'spectator') return 'Ждём пока игроки сделают выбор';
-    if (!secondPlayer.choice && !firstPlayer.choice) return 'Ну же выбирайте!';
-    if (!secondPlayer.choice) return 'Ждём второго пользователя...';
-    if (!firstPlayer.choice) return 'Ждём вас!';
+    if (!secondPlayer) return intl.t('pages.game.status.waitSecondPlayer');
+    if (user.role === 'spectator') return intl.t('pages.game.status.waitPlayersChooseSpectator');
+    if (!secondPlayer.choice && !firstPlayer.choice)
+      return intl.t('pages.game.status.waitPlayersChoose');
+    if (!secondPlayer.choice) return intl.t('pages.game.status.waitSecondPlayerChoose');
+    if (!firstPlayer.choice) return intl.t('pages.game.status.waitFirstPlayerChoose');
 
     return '(❁´◡`❁)';
   };

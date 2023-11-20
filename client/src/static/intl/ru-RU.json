@@ -1,0 +1,16 @@
+{
+  "input.label.yourName": "Ваше имя",
+
+  "button.connect": "Подключиться",
+  "button.restart": "Заново",
+
+  "pages.game.status.draw": "Ничья!",
+  "pages.game.status.youWin": "Вы победили!",
+  "pages.game.status.youLose": "Вы проиграли 😔",
+  "pages.game.status.somebodyWin": "{user} выиграл!",
+  "pages.game.status.waitSecondPlayer": "Ждём второго пользователя...",
+  "pages.game.status.waitPlayersChooseSpectator": "Ждём пока игроки сделают выбор",
+  "pages.game.status.waitPlayersChoose": "Ну же выбирайте!",
+  "pages.game.status.waitSecondPlayerChoose": "Ждём, пока ваш оппонент сделает выбор...",
+  "pages.game.status.waitFirstPlayerChoose": "Ждём вас!"
+}

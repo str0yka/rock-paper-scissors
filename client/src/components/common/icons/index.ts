@@ -3,3 +3,4 @@ export * from './IconRock';
 export * from './IconScissors';
 export * from './IconSun';
 export * from './IconMoon';
+export * from './IconTranslate';

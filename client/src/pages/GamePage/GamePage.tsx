@@ -4,9 +4,11 @@ import { useParams } from 'react-router-dom';
 import { Button, Spinner } from '~/components/common';
 import { EntryRoom, GameButton, GameStatus } from './components';
 import { CHOICES, CLIENT_MESSAGE_EVENT, SERVER_MESSAGE_EVENT } from '~/utils/constants';
+import { useIntl } from '~/features/intl';
 
 export const GamePage = () => {
   const { roomId } = useParams();
+  const intl = useIntl();
   const [connected, setConnected] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [room, setRoom] = useState<Room | null>(null);
@@ -92,7 +94,9 @@ export const GamePage = () => {
         user={user}
         winner={room.winner}
       />
-      {room.winner && user.role === 'player' && <Button onClick={restart}>Заново</Button>}
+      {room.winner && user.role === 'player' && (
+        <Button onClick={restart}>{intl.t('button.restart')}</Button>
+      )}
       <div className="flex gap-6">
         {CHOICES.map((choice) => (
           <GameButton

@@ -1,0 +1,16 @@
+{
+  "input.label.yourName": "Your name",
+
+  "button.connect": "Connect",
+  "button.restart": "Restart",
+
+  "pages.game.status.draw": "Draw!",
+  "pages.game.status.youWin": "You win!",
+  "pages.game.status.youLose": "Sometimes it happens",
+  "pages.game.status.somebodyWin": "{user} won",
+  "pages.game.status.waitSecondPlayer": "Wait second player to connect...",
+  "pages.game.status.waitPlayersChooseSpectator": "Waiting for the players to make a choice",
+  "pages.game.status.waitPlayersChoose": "Come on, choose!",
+  "pages.game.status.waitSecondPlayerChoose": "Wait for your opponent to choose...",
+  "pages.game.status.waitFirstPlayerChoose": "Waiting only for you"
+}

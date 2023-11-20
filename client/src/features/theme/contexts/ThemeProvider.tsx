@@ -1,24 +1,10 @@
-import { useEffect, useState } from 'react';
-
-import { ThemeService } from '../utils/services';
 import { ThemeContext } from './ThemeContext';
+import type { ThemeState } from './ThemeContext';
 
-interface ThemeProviderProps {
+interface ThemeProviderProps extends ThemeState {
   children: React.ReactNode;
 }
 
-export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
-  const defaultTheme = ThemeService.get();
-  const [theme, setTheme] = useState<Theme>(defaultTheme);
-
-  useEffect(() => {
-    ThemeService.initialize();
-  }, []);
-
-  const toggleTheme = () => {
-    const newTheme = ThemeService.toggle();
-    setTheme(newTheme);
-  };
-
-  return <ThemeContext.Provider value={{ theme, toggleTheme }}>{children}</ThemeContext.Provider>;
+export const ThemeProvider: React.FC<ThemeProviderProps> = ({ theme, setTheme, children }) => {
+  return <ThemeContext.Provider value={{ theme, setTheme }}>{children}</ThemeContext.Provider>;
 };

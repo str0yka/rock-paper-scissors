@@ -1,13 +1,11 @@
 import { createContext } from 'react';
 
-import { THEME_DEFAULT } from '../utils/constants';
-
-interface ThemeState {
+export interface ThemeState {
   theme: Theme;
-  toggleTheme: () => void;
+  setTheme: (theme: Theme | ((theme: Theme) => Theme)) => void;
 }
 
 export const ThemeContext = createContext<ThemeState>({
-  theme: THEME_DEFAULT,
-  toggleTheme: () => {},
+  theme: 'light',
+  setTheme: () => {},
 });
